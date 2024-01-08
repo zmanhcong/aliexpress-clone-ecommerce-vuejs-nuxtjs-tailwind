@@ -1,17 +1,7 @@
-const { PrismaClient } = require("@prisma/client");
-
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-async function getAllProducts() {
-    try {
-        const products = await prisma.products.findMany();
-        return products;
-    } catch (error) {
-        console.error("Error retrieving products:", error);
-        throw error;
-    } finally {
-        await prisma.$disconnect();
-    }
-}
-
-module.exports = getAllProducts;
+export default defineEventHandler(async (event) => {
+    let products = await prisma.products.findMany();
+    return products;
+});
