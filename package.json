@@ -10,6 +10,9 @@
         "preview": "nuxt preview",
         "postinstall": "nuxt prepare"
     },
+    "prisma": {
+        "seed": "node prisma/seed.js"
+    },
     "devDependencies": {
         "nuxt": "^3.9.0",
         "vue": "^3.4.3",
