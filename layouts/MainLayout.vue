@@ -116,11 +116,39 @@
                                 />
                             </button>
                         </div>
+
+                        <div
+                            v-if="items && items.data"
+                            class="absolute bg-white max-w-[700px] h-auto w-full"
+                        >
+                            <div v-for="item in items.data" :key="item" class="p-1">
+                                <NuxtLink
+                                    :to="`/item/${item.id}`"
+                                    class="flex items-center justify-between w-full cursor-pointer hover:bg-gray-100"
+                                >
+                                    <div class="flex items-center">
+                                        <img
+                                            class="rounded-md"
+                                            width="40"
+                                            :src="item.url"
+                                        />
+                                        <div
+                                            class=".truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } ml-2"
+                                        >
+                                            {{ item.title }}
+                                        </div>
+                                    </div>
+                                    <div class="truncate">${{ item.price / 100 }}</div>
+                                </NuxtLink>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <Loading v-if="userStore.isLoading" />
 
     <div class="lg:pt-[150px] md:pt-[130px] pt-[80px]" />
 
@@ -128,14 +156,35 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-// import { Icon } from "@iconify/vue";
+import { useUserStore } from "~/stores/user";
+const userStore = useUserStore();
 
-const isAccountMenu = ref(false);
-const searchItem = ref("");
-const isSearching = ref(true);
+const client = useSupabaseClient();
+const user = useSupabaseUser();
 
-const { user } = ref(true);
+let isAccountMenu = ref(false);
+let isCartHover = ref(false);
+let isSearching = ref(false);
+let searchItem = ref("");
+let items = ref(null);
+
+const searchByName = useDebounce(async () => {
+    isSearching.value = true;
+    items.value = await useFetch(`/api/prisma/search-by-name/${searchItem.value}`);
+    isSearching.value = false;
+}, 100);
+
+watch(
+    () => searchItem.value,
+    async () => {
+        if (!searchItem.value) {
+            setTimeout(() => {
+                items.value = "";
+                isSearching.value = false;
+                return;
+            }, 500);
+        }
+        searchByName();
+    }
+);
 </script>
-
-<style lang="scss" scoped></style>
