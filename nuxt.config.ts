@@ -6,9 +6,12 @@ export default defineNuxtConfig({
         "nuxt-lodash",
         "@pinia/nuxt",
         "@pinia-plugin-persistedstate/nuxt",
-        // "@nuxtjs/supabase",
+        "@nuxtjs/supabase",
         "@nuxtjs/tailwindcss",
     ],
+    supabase: {
+        redirect: false,
+    },
     runtimeConfig: {
         public: {
             stripePk: process.env.STRIPE_PK_KEY,
