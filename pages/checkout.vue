@@ -127,6 +127,8 @@
 <script setup>
 import MainLayout from "~/layouts/MainLayout.vue";
 import { useUserStore } from "~/stores/user";
+import CheckoutItem from "../components/CheckoutItem.vue";
+
 const userStore = useUserStore();
 const user = useSupabaseUser();
 const route = useRoute();
@@ -182,6 +184,7 @@ watch(
 const stripeInit = async () => {
     const runtimeConfig = useRuntimeConfig();
     stripe = Stripe(runtimeConfig.stripePk);
+    console.log("🚀 log of stripe:", stripe);
 
     let res = await $fetch("/api/stripe/paymentintent", {
         method: "POST",
